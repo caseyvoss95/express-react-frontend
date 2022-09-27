@@ -7,6 +7,7 @@ function Main(props) {
     const [people, setPeople] = useState(null);
 
     const URL = "http://localhost:4000/people/";
+    //const URL = "https://casey-expres-backend.herokuapp.com/people"
 
     const getPeople = async () => {
         const response = await fetch(URL);
@@ -27,6 +28,25 @@ function Main(props) {
         getPeople();
     };
 
+    const updatePeople = async (person, id) => {
+        await fetch(URL + id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "Application/json",
+            },
+            body: JSON.stringify(person),
+        });
+        getPeople();
+    }
+
+
+    const deletePeople = async id => {
+        await fetch(URL + id, {
+            method: "DELETE",
+        })
+        getPeople();
+    }
+
     useEffect(() => { getPeople(); }, []);
 
     return (
@@ -39,6 +59,9 @@ function Main(props) {
                     path="/people/:id"
                     render={(rp) => (
                         <Show
+                            people={people}
+                            updatePeople={updatePeople}
+                            deletePeople={deletePeople}
                             {...rp}
                         />
                     )}
